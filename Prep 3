@@ -1,0 +1,250 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyPhPHJXZqlGzF5lcjX/9S+P",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Muddyworm2355/MIS-2800/blob/main/Prep%203\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 2,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "4ht3hhCcrF0D",
+        "outputId": "d803f43e-3a61-40b8-e0ad-48c41706665e"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Database connected successfully\n"
+          ]
+        }
+      ],
+      "source": [
+        "import sqlite3\n",
+        "# Connect to (or create) the database\n",
+        "conn = sqlite3.connect('NFL_Scouting.db')\n",
+        "# Create a cursor object to run SQL commands\n",
+        "cursor = conn.cursor()\n",
+        "print(\"Database connected successfully\")"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Create scouting_stats table\n",
+        "cursor.execute(\"\"\"\n",
+        "CREATE TABLE IF NOT EXISTS scouting_stats (\n",
+        "    team_name TEXT,\n",
+        "    city TEXT,\n",
+        "    wins INTEGER,\n",
+        "    points_per_game REAL\n",
+        ")\n",
+        "\"\"\")\n",
+        "conn.commit()\n",
+        "print(\"Table created successfully\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "-Tys7WLJrTRx",
+        "outputId": "ce669549-0256-48f8-f1ca-62d79e0f970e"
+      },
+      "execution_count": 4,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Table created successfully\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Insert sample NFL team data\n",
+        "cursor.execute(\"\"\"\n",
+        "INSERT INTO scouting_stats (team_name, city, wins, points_per_game)\n",
+        "VALUES\n",
+        "    ('Chiefs', 'Kansas City', 11, 29.2),\n",
+        "    ('Bills', 'Buffalo', 10, 26.5),\n",
+        "    ('Cowboys', 'Dallas', 12, 27.8),\n",
+        "    ('Jets', 'New York', 7, 18.6)\n",
+        "\"\"\")\n",
+        "conn.commit()\n",
+        "print(\"Data inserted successfully\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "F1Z8JD9xrePo",
+        "outputId": "d41f53b7-3e82-42f1-b78d-6a15951e7571"
+      },
+      "execution_count": 6,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Data inserted successfully\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "cursor.execute(\"\"\"\n",
+        "SELECT * FROM scouting_stats\n",
+        "WHERE points_per_game > 24\n",
+        "\"\"\")\n",
+        "results = cursor.fetchall()\n",
+        "print(\"Teams averaging more than 24 points per game:\")\n",
+        "for row in results:\n",
+        "    print(row)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "poABk5WBrpty",
+        "outputId": "ec660220-703e-4d44-c78c-9daec9aaeecf"
+      },
+      "execution_count": 8,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Teams averaging more than 24 points per game:\n",
+            "('Chiefs', 'Kansas City', 11, 29.2)\n",
+            "('Bills', 'Buffalo', 10, 26.5)\n",
+            "('Cowboys', 'Dallas', 12, 27.8)\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "cursor.execute(\"\"\"\n",
+        "SELECT * FROM scouting_stats\n",
+        "ORDER BY wins DESC\n",
+        "\"\"\")\n",
+        "results = cursor.fetchall()\n",
+        "print(\"Teams sorted by wins (highest to lowest):\")\n",
+        "for row in results:\n",
+        "    print(row)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "R4OmjepBrv_W",
+        "outputId": "66c11a23-ca20-4479-c86c-66ae8ee70424"
+      },
+      "execution_count": 10,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Teams sorted by wins (highest to lowest):\n",
+            "('Cowboys', 'Dallas', 12, 27.8)\n",
+            "('Chiefs', 'Kansas City', 11, 29.2)\n",
+            "('Bills', 'Buffalo', 10, 26.5)\n",
+            "('Jets', 'New York', 7, 18.6)\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "cursor.execute(\"\"\"\n",
+        "SELECT * FROM scouting_stats\n",
+        "WHERE wins > 5\n",
+        "ORDER BY city ASC\n",
+        "\"\"\")\n",
+        "results = cursor.fetchall()\n",
+        "print(\"Teams with more than 5 wins, sorted by city:\")\n",
+        "for row in results:\n",
+        "    print(row)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "lCiiny78sEjD",
+        "outputId": "528da2b5-6744-4420-803b-89b98cf092e2"
+      },
+      "execution_count": 12,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Teams with more than 5 wins, sorted by city:\n",
+            "('Bills', 'Buffalo', 10, 26.5)\n",
+            "('Cowboys', 'Dallas', 12, 27.8)\n",
+            "('Chiefs', 'Kansas City', 11, 29.2)\n",
+            "('Jets', 'New York', 7, 18.6)\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "conn.close()\n",
+        "print(\"Database connection closed\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "hkxBEOdbsOpM",
+        "outputId": "1f24651f-788d-45e0-daf8-c4e3d37da825"
+      },
+      "execution_count": 13,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Database connection closed\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
